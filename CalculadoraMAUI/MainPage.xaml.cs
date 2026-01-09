@@ -14,7 +14,7 @@ namespace CalculadoraMAUI
         }
         double currentNumber = 0;
         double storedNumber = 0;
-        double result = 0;
+        double tempNumber = 0;
         Operation currentOperation = Operation.NONE;
 
 
@@ -36,7 +36,7 @@ namespace CalculadoraMAUI
                 return;
             }
 
-            if (Double.Parse(ResultLbl.Text) == 0 )
+            if (Double.Parse(ResultLbl.Text) == 0 && number != "," && !ResultLbl.Text.Contains(","))
             {
                 display = number;
             }
@@ -59,31 +59,26 @@ namespace CalculadoraMAUI
             {
                 case ("+"):
                     {
-                        Console.WriteLine("operation set to add");
                         currentOperation = Operation.ADD;
                         break;
                     }
                 case ("-"):
                     {
-                        Console.WriteLine("operation set to subtract");
                         currentOperation = Operation.SUBTRACT;
                         break;
                     }
                 case ("x"):
                     {
-                        Console.WriteLine("operation set to multiply");
                         currentOperation = Operation.MULTIPLY;
                         break;
                     }
                 case ("/"):
                     {
-                        Console.WriteLine("operation set to divide");
                         currentOperation = Operation.DIVIDE;
                         break;
                     }
                 default:
                     {
-                        Console.WriteLine("operation set to none");
                         currentOperation = Operation.NONE;
                         break;
                     }
@@ -93,7 +88,15 @@ namespace CalculadoraMAUI
 
         private void OnBackspacePress(object sender, EventArgs e)
         {
-            ResultLbl.Text = ResultLbl.Text[..^1];
+            if (ResultLbl.Text.Length > 1)
+            {
+                ResultLbl.Text = ResultLbl.Text[..^1];
+
+            }
+            else
+            {
+                ResultLbl.Text = "0";
+            }
         }
 
         private void OnEqualsPress(object sender, EventArgs e)
@@ -106,44 +109,48 @@ namespace CalculadoraMAUI
         {
             storedNumber = 0;
             currentNumber = 0;
-            result = 0;
+            tempNumber = 0;
             ResultLbl.Text = "0";
         }
 
         private double Calculate()
         {
-            Console.WriteLine("Calculating...");
+            double result = 0;
+            if(tempNumber == 0)
+            {
+                tempNumber = currentNumber;
+
+            }
             switch(currentOperation)
             {
                 case (Operation.ADD):
                     {
-                        result = storedNumber + currentNumber;
+                        result = storedNumber + tempNumber;
                         break;
                     }
                 case (Operation.SUBTRACT):
                     {
-                        result = storedNumber - currentNumber;
+                        result = storedNumber - tempNumber;
                         break;
                     }
                 case (Operation.MULTIPLY):
                     {
-                        result = storedNumber * currentNumber;
+                        result = storedNumber * tempNumber;
                         break;
                     }
                 case (Operation.DIVIDE):
                     {
-                        result = storedNumber / currentNumber;
+                        result = storedNumber / tempNumber;
                         break;
                     }
                 default:
                     {
-                        result = currentNumber;
+                        result = tempNumber;
                         break;
                     }
             }
 
-            Console.WriteLine($"Result: {result}");
-
+            storedNumber = result;
             return result;
         }
     }
